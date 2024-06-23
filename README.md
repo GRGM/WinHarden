@@ -1,5 +1,5 @@
 # WinHarden
-Program to find misconfigurations on Windows systems
+C# program to find misconfigurations on Windows systems.
 
 # Introduction
 Perform a complete review of a system may be complex:
