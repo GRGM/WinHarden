@@ -9,9 +9,11 @@ Perform a complete review of a system may be complex:
   - Sometimes, output of .NET libraries does not cover all possible Windows configurations, flags and masks.
   - Some concrete Windows commands provide output in a non-readable way that hinders to analyze them properly. 
 
+The target of this tool is extracting the security configuration of a Windows host in readable format to allow analyzing them manually or by other programs. Moreover, it includes a module to filter the extracted files to detect misconfigurations that could lead to security gaps. It has been specially focused on removing false positives gaps.
+
 # Tool usage
-1. There are two wyas to use this tool:
-   - Program from ExtractWinHardenApp. This project only allows extracting the Windows security configuration files, as access control and audit confirguration for a list of folders included in an input file. This tool is used to extract the files from different Windows Host to be analyzed in next program. This program includes a simple interface to ease the task of gathering security configuration files from a set of Windows hosts.
+1. There are two ways to use this tool:
+   - Program from ExtractWinHardenApp. This project only allows extracting the Windows security configuration files, as access control and audit configuration for a list of folders included in an input file. This tool is used to extract the files from different Windows Host to be analyzed in next program. This program includes a simple interface to ease the task of gathering security configuration files from a set of Windows hosts.
    - Program from WinHardenApp project. This project allows extracting the Windows security configuration files from local Windows host and analyzing them. This program includes a more complete interface to ease the task of analyzing the security configuration files from the local host or from the Windows hosts extracted by the above program.   
 2. Tool does not require administrator privileges. Nevertheless, executing extracting files module under administrator privileges allows obtaining concrete commands for more results.
 
@@ -26,13 +28,13 @@ Perform a complete review of a system may be complex:
    - System privileges for local users.   
    - Password policy.
    - Active directory information for local administrator accounts.
-   - Access control and audit configuratoin in selected list of folders by input file.
+   - Access control and audit configuration in selected list of folders by input file.
 
 # Analysis result module
-1. This module process files obtained in the previous module. This module is invoked from Analyse buttom from WinHardenApp program.
+1. This module process files obtained in the previous module. This module is invoked from Analyze button from WinHardenApp program.
 2. Aim of this module is filtering relevant information to ease identifying any possible misconfiguration that deteriorates the security of the Windows host.
 3. Examples of relevant filtered result files for security reviews:
-   - Vulnerable folders, tasks, programs, services and registry keys to binary planting and other techniques to escalate privileges. This tool considers as vulnerable ojects when any non-administrator group or user may modifiyng them, instead of only filtering by Everyone or similar groups as other public tools work.
+   - Vulnerable folders, tasks, programs, services and registry keys to binary planting and other techniques to escalate privileges. This tool considers as vulnerable objects when any non-administrator group or user may modify them, instead of only filtering by Everyone or similar groups as other public tools work.
    - Unsecure registry key values.
    - Process arguments to try to find passwords as parameters.
    - Antivirus status.
@@ -41,3 +43,4 @@ Perform a complete review of a system may be complex:
 # Next steps
 1. Gather feedback from the community for improvement.
 2. Continue adding more features and tools to build an even more complete Windows auditing framework.
+
