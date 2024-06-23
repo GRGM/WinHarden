@@ -10,11 +10,13 @@ Perform a complete review of a system may be complex:
   - Some concrete Windows commands provide output in a non-readable way that hinders to analyze them properly. 
 
 # Tool usage
-1. Tool has a simple interface. User may select where configuration output commands and filtered results are showed. Moreover, user may select list of folders to retrieve access control and audit confirguration for a more detailed analysis in critical folders.
+1. There are two wyas to use this tool:
+   - Program from ExtractWinHardenApp. This project only allows extracting the Windows security configuration files, as access control and audit confirguration for a list of folders included in an input file. This tool is used to extract the files from different Windows Host to be analyzed in next program. This program includes a simple interface to ease the task of gathering security configuration files from a set of Windows hosts.
+   - Program from WinHardenApp project. This project allows extracting the Windows security configuration files from local Windows host and analyzing them. This program includes a more complete interface to ease the task of analyzing the security configuration files from the local host or from the Windows hosts extracted by the above program.   
 2. Tool does not require administrator privileges. Nevertheless, executing extracting files module under administrator privileges allows obtaining concrete commands for more results.
 
 # Information gathering module
-1. This module generates output files to be reviewed manually, to be processed in next analysis module or to be processed by other scripts/tools of the user.
+1. This module generates output files to be reviewed manually, to be processed in next analysis module or to be processed by other scripts/tools of the user. This module may be run from ExtractWinHardenApp program or Extract button from WinHardenApp program.
 2. Aim of this module is gathering all information of a Windows system that could be useful and interesting for any security review.
 3. Examples of relevant generated files for security reviews:
    - Access control on paths/registry keys related to binary planting attacks to allow escalating privileges, as startup folders, startup programs, running processes, scheduled tasks, services.
@@ -27,7 +29,7 @@ Perform a complete review of a system may be complex:
    - Access control and audit configuratoin in selected list of folders by input file.
 
 # Analysis result module
-1. This module process files obtained in the previous module.
+1. This module process files obtained in the previous module. This module is invoked from Analyse buttom from WinHardenApp program.
 2. Aim of this module is filtering relevant information to ease identifying any possible misconfiguration that deteriorates the security of the Windows host.
 3. Examples of relevant filtered result files for security reviews:
    - Vulnerable folders, tasks, programs, services and registry keys to binary planting and other techniques to escalate privileges. This tool considers as vulnerable ojects when any non-administrator group or user may modifiyng them, instead of only filtering by Everyone or similar groups as other public tools work.
