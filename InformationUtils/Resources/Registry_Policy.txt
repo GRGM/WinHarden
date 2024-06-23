@@ -1,0 +1,59 @@
+Registry key:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa
+LimitBlankPasswordUse = 1
+NoLmHash = 1
+SecureBoot = 1
+everyoneincludesanonymous = 0
+forceguest = 0
+restrictanonymous = 1
+restrictanonymoussam = 1
+LmCompatibilityLevel = 5
+RunAsPPL = 1
+
+Registry key:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters
+EnablePlainTextPassword = 0
+EnableSecuritySignature = 1
+RequireSecuritySignature = 1
+
+Registry key:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters
+DisablePasswordChange = 0
+RequireSignOrSeal = 1
+RequireStrongKey = 1
+SealSecureChannel = 1
+SignSecureChannel = 1
+
+Registry key:HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters
+requiresecuritysignature = 1
+restrictnullsessaccess = 1
+SMB1 = 0
+
+Registry key:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System
+ConsentPromptBehaviorAdmin = 3
+EnableLUA = 1
+EnableSecureUIAPaths = 1
+EnableUIADesktopToggle = 0
+
+Registry key:HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
+ScanWithAntiVirus = 3
+NoAutorun = 1
+
+Registry key:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
+UseLogonCredential = 0
+
+Registry key:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WinRM\Client
+AllowBasic = 0
+AllowUnencryptedTraffic = 0
+AllowDigest = 0
+
+Registry key:HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WinRM\Service
+AllowBasic = 0
+AllowUnencryptedTraffic = 0
+DisableRunAs = 1
+
+Registry key:HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server
+fSingleSessionPerUser = 1
+
+Registry key:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer
+AlwaysInstallElevated = 0
+
+Registry key:HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer
+NoAutoplayfornonVolume = 1
