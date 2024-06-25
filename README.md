@@ -19,7 +19,7 @@ The target of this tool is extracting the security configuration of a Windows ho
 
 # Information gathering module
 1. This module generates output files to be reviewed manually, to be processed in next analysis module or to be processed by other scripts/tools of the user. This module may be run from ExtractWinHardenApp program or Extract button from WinHardenApp program.
-2. Aim of this module is gathering all information of a Windows system that could be useful and interesting for any security review.
+2. Objective of this module is gathering all information of a Windows system that could be useful and interesting for any security review.
 3. Examples of relevant generated files for security reviews:
    - Access control on paths/registry keys related to binary planting attacks to allow escalating privileges, as startup folders, startup programs, running processes, scheduled tasks, services.
    - Access control on net shared folders.
