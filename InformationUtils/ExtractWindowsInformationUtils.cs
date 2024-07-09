@@ -82,7 +82,7 @@ namespace InformationUtils
             m_windowsInformationUtils.UpdateProgressBar("Extracting logons from event viewer");
             GetLogons();
 
-            ////Getting ACL permissions on Shares requires administrator privileges.
+            //Getting ACL permissions on Shares requires administrator privileges.
             m_windowsInformationUtils.UpdateProgressBar("Getting ACL shares information");
             GetACLShares();
 
@@ -232,8 +232,6 @@ namespace InformationUtils
                 // This command creates a report that displays what group policies objects are applied to a user and computer.
                 ProcessComandWithProgress("gpresult /v > ", m_extractionBaseFolder + @"\gpresult.txt", "Getting gpresult");
                 ProcessComandWithProgress("route print > ", m_extractionBaseFolder + @"\route.txt", "Getting route print");
-                ProcessComandWithProgress("net share > ", m_extractionBaseFolder + @"\netshare.txt", "Getting net share");
-                ProcessComandWithProgress("wmic share get AllowMaximum,Caption,Description,MaximumAllowed,Name,Path,Status,Type /format:csv > ", m_extractionBaseFolder + @"\netshare.csv", "Getting wmic share");
                 ProcessComandWithProgress("net use > ", m_extractionBaseFolder + @"\netuse.txt", "Getting net use");
                 ProcessComandWithProgress("powershell Get-ExecutionPolicy > ", m_extractionBaseFolder + @"\executionPolicy.txt", "Getting powershell");
 
@@ -1045,10 +1043,12 @@ namespace InformationUtils
         private void GetACLShares()
         {
             try
-            { 
+            {
+                ProcessComandWithProgress("net share > ", m_extractionBaseFolder + @"\netshare.txt", "Getting net share");
+                ProcessComandWithProgress("wmic share get AllowMaximum,Caption,Description,MaximumAllowed,Name,Path,Status,Type /format:csv > ", m_extractionBaseFolder + @"\netshare.csv", "Getting wmic share");
                 ShareUtils shareUtils = new ShareUtils(m_extractionBaseFolder);
-                shareUtils.GetACLNetShares("ACLNetShare.txt");
-                shareUtils.GetACLWMIShares("ACLWMIShare.txt");
+                Dictionary<string, string> sharesPath = shareUtils.GetACLNetShares("ACLNetShare.txt");
+                shareUtils.GetACLWMIShares("ACLWMIShare.txt", sharesPath);
             }
             catch (Exception exception)
             {

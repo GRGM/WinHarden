@@ -174,7 +174,10 @@ namespace InformationUtils
             }
             if (taskName == "")
             {
-                throw new Exception("Unexpected XML format document for scheduled task.");
+                //If there is an incorrect format, we do not record it in the file to be used later in the analysis module.
+
+                //throw new Exception("Unexpected XML format document for scheduled task.");
+                return;
             }
             XmlNodeList principalNodes = root.ChildNodes[1].ChildNodes[0].ChildNodes;
 
@@ -205,7 +208,10 @@ namespace InformationUtils
                     groupId=node.InnerText;
                     continue;
                 }
-                throw new Exception("Unexpected field in XML format document for scheduled task.");
+                //If there is an incorrect format, we do not record it in the file to be used later in the analysis module.
+
+                //throw new Exception("Unexpected field in XML format document for scheduled task.");
+                return;
             }
             string line = taskName + "," + logonType + "," + runLevel + "," + userId + ","+ groupId;
             outputFile.WriteLine(line);

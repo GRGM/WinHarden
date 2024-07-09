@@ -51,64 +51,85 @@ namespace WinHardenApp.AnalyzeInformationUtils
 
         internal void AnalyseSecurityPoliciesCompliance()
         {
-            SecurityPolicyConfiguration securityPolicyConfiguration = m_configuration.ComplianceConfiguration.SecurityPolicyConfigruation;
-            string inputFileName = "";
-            
-            //Using defuault securit policy template provokes using secedit.cfg file
-            if(securityPolicyConfiguration.IsTranslatedSID && securityPolicyConfiguration.SecurityPolicyFile !=null && securityPolicyConfiguration.SecurityPolicyFile.Trim()!="")
+            try
             {
-                inputFileName = m_configurationFilesFolder + @"\secedit_translated_SID.cfg";
-            }
-            else
-            {
-                inputFileName = m_configurationFilesFolder + @"\secedit.cfg";
-            }
-            //Sometimes required file as secedit.cfg is not generated due to it was not executed under administrator privileges
-            if(!File.Exists(inputFileName))
-            {
-                return;
-            }
-            string outputFilename = m_analysisOutputFolder + @"\secedit_RESULT.txt";
+                SecurityPolicyConfiguration securityPolicyConfiguration = m_configuration.ComplianceConfiguration.SecurityPolicyConfigruation;
+                string inputFileName = "";
 
-            SecurityPolicyUtils.CompareSecurityPolicyFiles(inputFileName, securityPolicyConfiguration.SecurityPolicyFile, outputFilename);
+                //Using defuault securit policy template provokes using secedit.cfg file
+                if (securityPolicyConfiguration.IsTranslatedSID && securityPolicyConfiguration.SecurityPolicyFile != null && securityPolicyConfiguration.SecurityPolicyFile.Trim() != "")
+                {
+                    inputFileName = m_configurationFilesFolder + @"\secedit_translated_SID.cfg";
+                }
+                else
+                {
+                    inputFileName = m_configurationFilesFolder + @"\secedit.cfg";
+                }
+                //Sometimes required file as secedit.cfg is not generated due to it was not executed under administrator privileges
+                if (!File.Exists(inputFileName))
+                {
+                    return;
+                }
+                string outputFilename = m_analysisOutputFolder + @"\secedit_RESULT.txt";
+
+                SecurityPolicyUtils.CompareSecurityPolicyFiles(inputFileName, securityPolicyConfiguration.SecurityPolicyFile, outputFilename);
+            }
+            catch (Exception exception)
+            {
+                LogUtils.AddLogEntry(exception);
+            }
         }
 
         internal void AnalyseRegistryPoliciesCompliance()
         {
-            SecurityPolicyConfiguration securityPolicyConfiguration = m_configuration.ComplianceConfiguration.SecurityPolicyConfigruation;
-            string inputFileName = m_configurationFilesFolder + @"\RegistryPolicy.txt";
-            string outputFilename = m_analysisOutputFolder + @"\RegistryPolicy.txt_RESULT.txt";
+            try
+            {
+                SecurityPolicyConfiguration securityPolicyConfiguration = m_configuration.ComplianceConfiguration.SecurityPolicyConfigruation;
+                string inputFileName = m_configurationFilesFolder + @"\RegistryPolicy.txt";
+                string outputFilename = m_analysisOutputFolder + @"\RegistryPolicy.txt_RESULT.txt";
 
 
-            RegistryUtils.CompareRegistryPolicyFiles(inputFileName, securityPolicyConfiguration.RegistryKeyPolicy, outputFilename);
+                RegistryUtils.CompareRegistryPolicyFiles(inputFileName, securityPolicyConfiguration.RegistryKeyPolicy, outputFilename);
+            }
+            catch (Exception exception)
+            {
+                LogUtils.AddLogEntry(exception);
+            }
         }
 
 
 
         internal void AnalysePasswordPoliciesCompliance()
         {
-            string inputFileName = m_configurationFilesFolder + @"\localUsers.csv";
-            string outputFilename = m_analysisOutputFolder + @"\localUsers_passwordPolicies_RESULT.txt";
-            StreamWriter outputFile = new StreamWriter(outputFilename, false, Encoding.Default);
+            try
+            {
+                string inputFileName = m_configurationFilesFolder + @"\localUsers.csv";
+                string outputFilename = m_analysisOutputFolder + @"\localUsers_passwordPolicies_RESULT.txt";
+                StreamWriter outputFile = new StreamWriter(outputFilename, false, Encoding.Default);
 
 
-            List<int> lastPasswordDays = m_configuration.ComplianceConfiguration.PasswordPolicyConfiguration.LastPasswordDays;
-            List<int> lastLogonDays = m_configuration.ComplianceConfiguration.PasswordPolicyConfiguration.LastLogonDays;
-            if (lastPasswordDays != null)
-            {
-                foreach (int passwordDays in lastPasswordDays)
+                List<int> lastPasswordDays = m_configuration.ComplianceConfiguration.PasswordPolicyConfiguration.LastPasswordDays;
+                List<int> lastLogonDays = m_configuration.ComplianceConfiguration.PasswordPolicyConfiguration.LastLogonDays;
+                if (lastPasswordDays != null)
                 {
-                    WriteEnabledUsersLastPasswordSetDays(inputFileName, outputFile, passwordDays);
+                    foreach (int passwordDays in lastPasswordDays)
+                    {
+                        WriteEnabledUsersLastPasswordSetDays(inputFileName, outputFile, passwordDays);
+                    }
                 }
-            }
-            if (lastLogonDays != null)
-            {
-                foreach (int logonDays in lastLogonDays)
+                if (lastLogonDays != null)
                 {
-                    WriteEnabledUsersLastLogonDays(inputFileName, outputFile, logonDays);
+                    foreach (int logonDays in lastLogonDays)
+                    {
+                        WriteEnabledUsersLastLogonDays(inputFileName, outputFile, logonDays);
+                    }
                 }
+                outputFile.Close();
             }
-            outputFile.Close();
+            catch (Exception exception)
+            {
+                LogUtils.AddLogEntry(exception);
+            }
         }
 
         private static void WriteEnabledUsersLastPasswordSetDays(string inputFileName, StreamWriter outputFile,int lastDays)
@@ -203,59 +224,67 @@ namespace WinHardenApp.AnalyzeInformationUtils
 
         internal void AnalyseAuditPoliciesCompliance()
         {
-            string inputFileName = m_configurationFilesFolder + @"\auditpolicies.csv";
-
-            string domainFileName=m_configurationFilesFolder + @"\DomainRole.txt";
-
-            string outputFilename = m_analysisOutputFolder + @"\auditpolicies_RESULT.txt";
-            FileStream inputFileStream = new FileStream(inputFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            StreamReader inputFile = new StreamReader(inputFileStream, Encoding.Default);
-
-            FileStream domainFileStream = new FileStream(domainFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            StreamReader domainFile = new StreamReader(domainFileStream, Encoding.Default);
-
-            StreamWriter outputFile = new StreamWriter(outputFilename, false, Encoding.Default);
-
-            //We read the header
-            domainFile.ReadLine();
-            //Next line is the value
-            string domainRole=domainFile.ReadLine().Trim();
-            domainFile.Close();
-            //https://dirteam.com/sander/2009/09/23/how-to-tell-whether-it-s-a-server-core-domain-controller/
-            if (domainRole=="5" || domainRole == "4")
+            try
             {
-                m_isDomainServer = true;
+                string inputFileName = m_configurationFilesFolder + @"\auditpolicies.csv";
+
+                string domainFileName = m_configurationFilesFolder + @"\DomainRole.txt";
+
+                string outputFilename = m_analysisOutputFolder + @"\auditpolicies_RESULT.txt";
+                FileStream inputFileStream = new FileStream(inputFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                StreamReader inputFile = new StreamReader(inputFileStream, Encoding.Default);
+
+                FileStream domainFileStream = new FileStream(domainFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                StreamReader domainFile = new StreamReader(domainFileStream, Encoding.Default);
+
+                StreamWriter outputFile = new StreamWriter(outputFilename, false, Encoding.Default);
+
+                //We read the header
+                domainFile.ReadLine();
+                //Next line is the value
+                string domainRole = domainFile.ReadLine().Trim();
+                domainFile.Close();
+                //https://dirteam.com/sander/2009/09/23/how-to-tell-whether-it-s-a-server-core-domain-controller/
+                if (domainRole == "5" || domainRole == "4")
+                {
+                    m_isDomainServer = true;
+                }
+
+                List<string> auditPolicies = m_configuration.ComplianceConfiguration.AuditPolicyConfiguration.GetAuditPolicyRecommendations();
+
+                string[] separator = new string[1] { @"," };
+                //We read the header
+                inputFile.ReadLine();
+
+
+
+                m_headerFiles = GetPolicyFields(auditPolicies[0]);
+                auditPolicies.RemoveAt(0);
+
+
+                while (!inputFile.EndOfStream)
+                {
+                    string line = inputFile.ReadLine().ToUpper().Trim();
+                    if (line == "")
+                    {
+                        continue;
+                    }
+                    string[] fields = line.Split(separator, StringSplitOptions.None);
+                    string subCategoryGuid = fields[3];
+                    m_policyHost = fields[4];
+                    string checkResult = CheckAuditPolicies(auditPolicies, subCategoryGuid);
+                    if (checkResult != "")
+                    {
+                        outputFile.Write(checkResult);
+                    }
+                }
+                inputFile.Close();
+                outputFile.Close();
             }
-
-            List<string> auditPolicies = m_configuration.ComplianceConfiguration.AuditPolicyConfiguration.GetAuditPolicyRecommendations();
-
-            string[] separator = new string[1] { @"," };
-            //We read the header
-            inputFile.ReadLine();
-
-
-
-            m_headerFiles = GetPolicyFields(auditPolicies[0]);
-            auditPolicies.RemoveAt(0);
-
-
-            while (!inputFile.EndOfStream)
+            catch (Exception exception)
             {
-                string line = inputFile.ReadLine().ToUpper().Trim();
-                if (line == "")
-                {
-                    continue;
-                }
-                string[] fields = line.Split(separator, StringSplitOptions.None);
-                string subCategoryGuid = fields[3];
-                m_policyHost = fields[4];
-                string checkResult = CheckAuditPolicies(auditPolicies, subCategoryGuid);
-                if(checkResult!="")
-                {
-                    outputFile.Write(checkResult);
-                }
+                LogUtils.AddLogEntry(exception);
             }
-            outputFile.Close();
         }
 
         private string CheckAuditPolicies(List<string>  auditPolicies, string subCategoryGuidHost)

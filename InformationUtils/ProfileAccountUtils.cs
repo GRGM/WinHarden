@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -19,27 +20,35 @@ namespace InformationUtils
 
         public static ProfileAccountUtils GetProfileAccountUtils(string inputFileName)
         {
-            FileStream inputFileStream = new FileStream(inputFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            StreamReader inputFile = new StreamReader(inputFileStream, Encoding.Default);
-
-
-            string userProfileFolder = "";
-            while (!inputFile.EndOfStream)
+            try
             {
-                string line = inputFile.ReadLine().Trim();
-                if (line.StartsWith("USERPROFILE"))
-                {
-                    int slashPoistion = line.LastIndexOf(@"\");
-                    userProfileFolder = line.Substring(0, slashPoistion);
-                    int startPosition = userProfileFolder.IndexOf("=");
-                    userProfileFolder = userProfileFolder.Substring(startPosition + 1);
-                    break;
-                }
+                FileStream inputFileStream = new FileStream(inputFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                StreamReader inputFile = new StreamReader(inputFileStream, Encoding.Default);
 
+
+                string userProfileFolder = "";
+                while (!inputFile.EndOfStream)
+                {
+                    string line = inputFile.ReadLine().Trim();
+                    if (line.StartsWith("USERPROFILE"))
+                    {
+                        int slashPoistion = line.LastIndexOf(@"\");
+                        userProfileFolder = line.Substring(0, slashPoistion);
+                        int startPosition = userProfileFolder.IndexOf("=");
+                        userProfileFolder = userProfileFolder.Substring(startPosition + 1);
+                        break;
+                    }
+
+                }
+                inputFile.Close();
+                ProfileAccountUtils profileAccountUtils = new ProfileAccountUtils(userProfileFolder);
+                return profileAccountUtils;
             }
-            inputFile.Close();
-            ProfileAccountUtils profileAccountUtils = new ProfileAccountUtils(userProfileFolder);
-            return profileAccountUtils;
+            catch (Exception exception)
+            {
+                LogUtils.AddLogEntry(exception);
+                return null;
+            }
         }
 
         public bool IsUserProfileFolderSelfAccessed(string objectToReview, string line)

@@ -349,17 +349,23 @@ namespace WinHardenApp.Forms
 
                 AnalyseWindowsInformationUtils analyseWindowsInformationUtils = new AnalyseWindowsInformationUtils(configurationFolder, analysisOutputFolder, m_windowsInformationUtils);
                 AnalyseComplianceInformationUtils complianceUtils = new AnalyseComplianceInformationUtils(configurationFolder, analysisOutputFolder, WinHardenConfiguration.Configuration, m_windowsInformationUtils);
+                LogUtils.InitLogFile(analysisOutputFolder + @"\log_analysis.txt");
                 analyseWindowsInformationUtils.AnalyseWindowsInformation();
                 complianceUtils.AnalyseComplianceInformation();
                 UpdateTreeView(analysisOutputFolderTextBox.Text, WinHardenConfiguration.AnalysisLabel);
 
+                if(File.Exists(LogUtils.LogFile))
+                {
+                    MessageBox.Show("Analysis has included some error. See log_analysis.txt file");
+                    OpenFileTab(LogUtils.LogFile);
+                }            
             }
             catch (Exception exception)
             {
                 string exceptionInformation = "Message: " + exception.Message + Environment.NewLine +
                             "Source: " + exception.Source + Environment.NewLine +
                             "Stack Trace: " + exception.StackTrace + Environment.NewLine;
-                File.AppendAllText(analysisOutputFolderTextBox.Text + @"\log.txt", exceptionInformation);
+                File.AppendAllText(analysisOutputFolderTextBox.Text + @"\log_analysis.txt", exceptionInformation);
                 MessageBox.Show("Analysis has not been completed. Error: " + exception.Message);
                 isError = true;
             }
@@ -505,6 +511,7 @@ namespace WinHardenApp.Forms
                 {
                     ColorFindText("EVERYONE");
                 }
+                inputFile.Close();
             }
             catch
             {
